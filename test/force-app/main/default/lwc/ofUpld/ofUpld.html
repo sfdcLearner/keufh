@@ -1,0 +1,41 @@
+<!-- serviceOrZipValidator.html -->
+<template>
+    <lightning-card title="Select Service Area or Zip Code">
+        <lightning-radio-group
+            name="selectOption"
+            label="Select an option"
+            options={options}
+            value={selectedOption}
+            onchange={handleChange}
+        ></lightning-radio-group>
+
+        <template if:true={selectedOption}>
+            <div>
+                <template if:true={selectedOption === 'serviceArea'}>
+                    <lightning-input label="Service Area" value={serviceArea} onchange={handleServiceAreaChange}></lightning-input>
+                </template>
+                <template if:true={selectedOption === 'zipCode'}>
+                    <lightning-input label="Zip Code" value={zipCode} onchange={handleZipCodeChange}></lightning-input>
+                </template>
+                <lightning-button label="Validate Input" variant="brand" onclick={handleValidation}></lightning-button>
+            </div>
+        </template>
+        <lightning-card title="Product Filter">
+            <div class="slds-m-around_medium">
+                <lightning-layout>
+                    <lightning-layout-item size="6">
+                        <lightning-checkbox label="National" checked={isNational} onchange={handleNationalChange}></lightning-checkbox>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="6">
+                        <lightning-combobox
+                            label="Product Family"
+                            options={productFamilyOptions}
+                            value={selectedProductFamily}
+                            onchange={handleProductFamilyChange}
+                        ></lightning-combobox>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </lightning-card>
+    </lightning-card>
+</template>
