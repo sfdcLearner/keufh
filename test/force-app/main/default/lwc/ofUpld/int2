@@ -1,0 +1,74 @@
+Sure, here's another basic JavaScript coding challenge tailored for a Salesforce developer:
+
+---
+
+**Challenge: Calculate the Average Age**
+
+You are given an array of user objects, each containing `id`, `name`, and `age` properties. Your task is to write a JavaScript function that calculates the average age of the users.
+
+**Requirements**:
+1. The function should accept an array of user objects.
+2. The function should return the average age as a number.
+3. If the array is empty, the function should return `0`.
+
+**Example Input**:
+```javascript
+const users = [
+    { id: 1, name: 'John Doe', age: 25 },
+    { id: 2, name: 'Jane Smith', age: 30 },
+    { id: 3, name: 'Alice Johnson', age: 35 },
+    { id: 4, name: 'Bob Brown', age: 40 }
+];
+```
+
+**Expected Output**:
+```javascript
+32.5
+```
+
+**Instructions**:
+- Write the function `calculateAverageAge(users)` that meets the requirements.
+- Make sure to handle edge cases, such as an empty array.
+
+**Code Skeleton**:
+```javascript
+function calculateAverageAge(users) {
+    // Your code here
+}
+
+// Example usage:
+const users = [
+    { id: 1, name: 'John Doe', age: 25 },
+    { id: 2, name: 'Jane Smith', age: 30 },
+    { id: 3, name: 'Alice Johnson', age: 35 },
+    { id: 4, name: 'Bob Brown', age: 40 }
+];
+
+console.log(calculateAverageAge(users)); // Expected output: 32.5
+```
+
+**Solution**:
+Here's a possible solution to the challenge:
+
+```javascript
+function calculateAverageAge(users) {
+    if (users.length === 0) {
+        return 0;
+    }
+
+    const totalAge = users.reduce((sum, user) => sum + user.age, 0);
+    return totalAge / users.length;
+}
+
+// Example usage:
+const users = [
+    { id: 1, name: 'John Doe', age: 25 },
+    { id: 2, name: 'Jane Smith', age: 30 },
+    { id: 3, name: 'Alice Johnson', age: 35 },
+    { id: 4, name: 'Bob Brown', age: 40 }
+];
+
+console.log(calculateAverageAge(users)); // Expected output: 32.5
+```
+
+This function calculates the total age of all users using the `reduce` method and then divides the total by the number of users to get the average age. It also handles the edge case of an empty array by returning `0`.
