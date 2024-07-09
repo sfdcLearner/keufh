@@ -1,0 +1,49 @@
+Sure! Here's a JavaScript interview question focused on understanding and using asynchronous methods:
+
+---
+
+**Challenge: Fetch User Data and Posts**
+
+You are given two asynchronous functions: `fetchUserData` and `fetchUserPosts`. The `fetchUserData` function fetches user details, and the `fetchUserPosts` function fetches posts made by the user. Both functions return promises.
+
+Your task is to write a function `getUserDetailsAndPosts` that:
+1. Calls `fetchUserData` to get user details.
+2. Calls `fetchUserPosts` to get the posts made by the user, using the user ID obtained from `fetchUserData`.
+3. Returns an object that contains both the user details and the user's posts.
+
+Assume the functions `fetchUserData` and `fetchUserPosts` are defined as follows:
+
+```javascript
+function fetchUserData() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve({ id: 1, name: 'John Doe', email: 'john.doe@example.com' });
+        }, 1000);
+    });
+}
+
+function fetchUserPosts(userId) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve([
+                { id: 101, userId: 1, title: 'Post 1', body: 'This is post 1' },
+                { id: 102, userId: 1, title: 'Post 2', body: 'This is post 2' }
+            ]);
+        }, 1000);
+    });
+}
+```
+
+**Example Input/Output**:
+```javascript
+const expectedOutput = {
+    user: { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
+    posts: [
+        { id: 101, userId: 1, title: 'Post 1', body: 'This is post 1' },
+        { id: 102, userId: 1, title: 'Post 2', body: 'This is post 2' }
+    ]
+};
+```
+
+**Instructions**:
+- Write the function `getUserDetailsAndPosts` that meets the requirements
