@@ -1,0 +1,97 @@
+Sure, here's a basic JavaScript coding challenge for a Salesforce developer that can test their understanding of JavaScript fundamentals within the context of a Salesforce Lightning Web Component (LWC):
+
+---
+
+**Challenge: Create a Contact List Filter**
+
+You are given an array of contact objects, each with `id`, `name`, and `email` properties. Your task is to write a JavaScript function that filters this list based on a search term. The function should be case-insensitive and should return all contacts whose `name` or `email` contains the search term.
+
+**Requirements**:
+1. The function should accept two parameters: the array of contacts and the search term.
+2. The function should return a new array containing only the contacts that match the search term.
+3. The function should be case-insensitive.
+
+**Example Input**:
+```javascript
+const contacts = [
+    { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
+    { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com' },
+    { id: 3, name: 'Alice Johnson', email: 'alice.j@example.com' },
+    { id: 4, name: 'Bob Brown', email: 'bob.brown@example.com' }
+];
+
+const searchTerm = 'john';
+```
+
+**Expected Output**:
+```javascript
+[
+    { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
+    { id: 3, name: 'Alice Johnson', email: 'alice.j@example.com' }
+]
+```
+
+**Instructions**:
+- Write the function `filterContacts(contacts, searchTerm)` that meets the requirements.
+- Make sure to handle edge cases, such as an empty search term or no matches found.
+
+**Code Skeleton**:
+```javascript
+function filterContacts(contacts, searchTerm) {
+    // Your code here
+}
+
+// Example usage:
+const contacts = [
+    { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
+    { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com' },
+    { id: 3, name: 'Alice Johnson', email: 'alice.j@example.com' },
+    { id: 4, name: 'Bob Brown', email: 'bob.brown@example.com' }
+];
+
+const searchTerm = 'john';
+
+console.log(filterContacts(contacts, searchTerm));
+// Expected output:
+// [
+//     { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
+//     { id: 3, name: 'Alice Johnson', email: 'alice.j@example.com' }
+// ]
+```
+
+**Solution**:
+Here's a possible solution to the challenge:
+
+```javascript
+function filterContacts(contacts, searchTerm) {
+    if (!searchTerm) {
+        return contacts;
+    }
+
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+
+    return contacts.filter(contact => 
+        contact.name.toLowerCase().includes(lowerCaseSearchTerm) || 
+        contact.email.toLowerCase().includes(lowerCaseSearchTerm)
+    );
+}
+
+// Example usage:
+const contacts = [
+    { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
+    { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com' },
+    { id: 3, name: 'Alice Johnson', email: 'alice.j@example.com' },
+    { id: 4, name: 'Bob Brown', email: 'bob.brown@example.com' }
+];
+
+const searchTerm = 'john';
+
+console.log(filterContacts(contacts, searchTerm));
+// Expected output:
+// [
+//     { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
+//     { id: 3, name: 'Alice Johnson', email: 'alice.j@example.com' }
+// ]
+```
+
+This function handles the filtering of the contacts based on the search term in a case-insensitive manner and returns the filtered array.
