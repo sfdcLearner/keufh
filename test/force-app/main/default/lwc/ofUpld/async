@@ -46,4 +46,45 @@ const expectedOutput = {
 ```
 
 **Instructions**:
-- Write the function `getUserDetailsAndPosts` that meets the requirements
+- Write the function `getUserDetailsAndPosts` that meets the requirements.
+- Ensure the function handles promises correctly and returns the combined result.
+
+**Code Skeleton**:
+```javascript
+async function getUserDetailsAndPosts() {
+    // Your code here
+}
+
+// Example usage:
+getUserDetailsAndPosts().then(result => console.log(result));
+```
+
+**Solution**:
+Here's a possible solution to the challenge:
+
+```javascript
+async function getUserDetailsAndPosts() {
+    try {
+        const user = await fetchUserData();
+        const posts = await fetchUserPosts(user.id);
+
+        return {
+            user: user,
+            posts: posts
+        };
+    } catch (error) {
+        console.error('Error fetching user details or posts:', error);
+        throw error;
+    }
+}
+
+// Example usage:
+getUserDetailsAndPosts().then(result => console.log(result));
+```
+
+**Explanation**:
+1. **Async/Await**: The function `getUserDetailsAndPosts` is declared as `async`, allowing the use of `await` within it.
+2. **Fetching Data**: The `fetchUserData` function is called first to get the user details. The result is stored in the `user` variable.
+3. **Fetching Posts**: The `fetchUserPosts` function is called with the user ID obtained from the `user` object. The result is stored in the `posts` variable.
+4. **Return Object**: The function returns an object containing both the `user` and `posts`.
+5. **Error Handling**: A `try...catch` block is used to catch and handle any errors that may occur during the asynchronous operations.
