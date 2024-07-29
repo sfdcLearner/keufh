@@ -66,3 +66,63 @@
         </template>
     </lightning-card>
 </template>
+
+import { LightningElement, track } from 'lwc';
+
+export default class ProductFilter extends LightningElement {
+    @track products = [
+        { id: 1, name: 'Laptop', category: 'Electronics', price: 1000 },
+        { id: 2, name: 'Headphones', category: 'Electronics', price: 200 },
+        { id: 3, name: 'Coffee Maker', category: 'Home Appliances', price: 100 },
+        { id: 4, name: 'Blender', category: 'Home Appliances', price: 150 },
+        { id: 5, name: 'Sneakers', category: 'Footwear', price: 80 }
+    ];
+
+    @track filteredProducts = [...this.products];
+    @track selectedCategory = '';
+    @track minPrice = '';
+    @track maxPrice = '';
+    @track noResults = false;
+
+    get categoryOptions() {
+        return [
+            { label: 'All Categories', value: '' },
+            { label: 'Electronics', value: 'Electronics' },
+            { label: 'Home Appliances', value: 'Home Appliances' },
+            { label: 'Footwear', value: 'Footwear' }
+        ];
+    }
+
+    handleCategoryChange(event) {
+        this.selectedCategory = event.detail.value;
+    }
+
+    handleMinPriceChange(event) {
+        this.minPrice = event.target.value;
+    }
+
+    handleMaxPriceChange(event) {
+        this.maxPrice = event.target.value;
+    }
+
+    applyFilters() {
+        const minPriceValue = parseFloat(this.minPrice);
+        const maxPriceValue = parseFloat(this.maxPrice);
+
+        if (minPriceValue > maxPriceValue) {
+            this.noResults = true;
+            this.filteredProducts = [];
+            return;
+        }
+
+        this.filteredProducts = this.products.filter(product => {
+            const isCategoryMatch = !this.selectedCategory || product.category === this.selectedCategory;
+            const isMinPriceMatch = !this.minPrice || product.price >= minPriceValue;
+            const isMaxPriceMatch = !this.maxPrice || product.price <= maxPriceValue;
+
+            return isCategoryMatch && isMinPriceMatch && isMaxPriceMatch;
+        });
+
+        this.noResults = this.filteredProducts.length === 0;
+    }
+}
