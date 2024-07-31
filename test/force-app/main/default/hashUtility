@@ -1,0 +1,20 @@
+public class HashUtility {
+    public static String generateHashKey(SObject record, List<String> fields) {
+        // Concatenate selected field values
+        String concatenatedValues = '';
+        for (String field : fields) {
+            concatenatedValues += (String)record.get(field);
+        }
+        
+        // Generate hash using SHA-256
+        Blob blobValue = Blob.valueOf(concatenatedValues);
+        Blob hash = Crypto.generateDigest('SHA-256', blobValue);
+        String hashKey = EncodingUtil.convertToHex(hash);
+        
+        return hashKey;
+    }
+}
+
+// Example usage
+List<String> fieldsToHash = new List<String>{'Field1__c', 'Field2__c', 'Field3__c'};
+String hashKey = HashUtility.generateHashKey(mySObject, fieldsToHash);
