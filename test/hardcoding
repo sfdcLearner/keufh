@@ -1,0 +1,20 @@
+public class OrderProcessor {
+    public Decimal calculateDiscount(String membershipTier) {
+        Decimal discount;
+        if (membershipTier == 'GOLD') {
+            discount = 0.20;
+        } else if (membershipTier == 'SILVER') {
+            discount = 0.10;
+        } else if (membershipTier == 'BRONZE') {
+            discount = 0.05;
+        } else {
+            discount = 0.00;
+        }
+        return discount;
+    }
+    
+    public Decimal processOrder(Decimal orderAmount, String membershipTier) {
+        Decimal discount = calculateDiscount(membershipTier);
+        return orderAmount - (orderAmount * discount);
+    }
+}
