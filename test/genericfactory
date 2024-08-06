@@ -1,0 +1,20 @@
+public interface CustomObject {
+        void create(Map<String, Object> fieldMapping, SobjectType sobj, Boolean stage);
+}
+
+public class SalesforceOrderModel {
+    public class AccountObject implements CustomObject{
+        public AccountObject () { 
+        }
+
+        public void create(Map<String, Object> fieldMapping, SobjectType sobj) {
+            sobject sobj = sobjType.newSObject();
+            for (String field : fieldMapping.keyset()) {
+                sobj.put(field, fieldMapping.get(field));
+            }
+            if (!stage) insert sobj;
+            return sobj;
+        }
+    }
+
+}
