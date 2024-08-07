@@ -1,0 +1,76 @@
+<template>
+    <lightning-card title="HTML Parser">
+        <div class="slds-m-around_medium">
+            <lightning-textarea label="HTML Input" value={htmlContent} onchange={handleInputChange}></lightning-textarea>
+            <lightning-input label="Search Key" value={searchKey} onchange={handleKeyChange}></lightning-input>
+            <lightning-button label="Parse HTML" onclick={parseHtml}></lightning-button>
+            <template if:true={parsedHtml}>
+                <div class="slds-m-top_medium">
+                    <div class="parsed-html" lwc:dom="manual"></div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
+
+import { LightningElement, track } from 'lwc';
+
+export default class HtmlParser extends LightningElement {
+    @track htmlContent = '';
+    @track searchKey = '';
+    @track parsedHtml = '';
+
+    handleInputChange(event) {
+        this.htmlContent = event.target.value;
+    }
+
+    handleKeyChange(event) {
+        this.searchKey = event.target.value;
+    }
+
+    parseHtml() {
+        // Parse the HTML content
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(this.htmlContent, 'text/html');
+        const links = doc.querySelectorAll('a');
+        
+        links.forEach(link => {
+            const url = new URL(link.href);
+            const searchParams = new URLSearchParams(url.search);
+            if (searchParams.has(this.searchKey)) {
+                // Modify the link
+                const newUrl = this.constructNewLink(url, searchParams);
+                link.href = newUrl.toString();
+            }
+        });
+
+        // Serialize the modified document back to a string
+        this.parsedHtml = new XMLSerializer().serializeToString(doc);
+
+        // Display the modified HTML content
+        this.template.querySelector('.parsed-html').innerHTML = this.parsedHtml;
+    }
+
+    constructNewLink(url, searchParams) {
+        // Example: Append '-modified' to the value of the search key
+        const keyValue = searchParams.get(this.searchKey);
+        searchParams.set(this.searchKey, `${keyValue}-modified`);
+
+        // Construct the new URL
+        const newUrl = new URL(url);
+        newUrl.search = searchParams.toString();
+
+        return newUrl;
+    }
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>57.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+    </targets>
+</LightningComponentBundle>
