@@ -1,0 +1,106 @@
+public class TestDataFactory {
+
+    // Method to cache required fields for a given object type
+    public static void cacheRequiredFields(String objectName) {
+        // Cache key to identify this data
+        String cacheKey = objectName + '_RequiredFields';
+
+        // Fetch required fields using schema describe
+        List<String> requiredFields = getRequiredFields(objectName);
+
+        // Cache the result in Salesforce Cache for 24 hours (86400 seconds)
+        Cache.OrgPartition partition = Cache.Org.getPartition('defaultPartition');
+        partition.put(cacheKey, requiredFields, 86400); // 24 hours cache time
+    }
+
+    // Method to fetch required fields of an object
+    public static List<String> getRequiredFields(String objectName) {
+        List<String> requiredFields = new List<String>();
+
+        // Describe the object and retrieve field metadata
+        Schema.SObjectType objectType = Schema.getGlobalDescribe().get(objectName);
+        Schema.DescribeSObjectResult describeResult = objectType.getDescribe();
+        Map<String, Schema.SObjectField> fieldMap = describeResult.fields.getMap();
+
+        // Loop through fields and determine required fields
+        for (String fieldName : fieldMap.keySet()) {
+            Schema.DescribeFieldResult fieldDescribe = fieldMap.get(fieldName).getDescribe();
+            if (!fieldDescribe.isNillable() && fieldDescribe.isCreateable()) {
+                requiredFields.add(fieldName);
+            }
+        }
+
+        return requiredFields;
+    }
+
+    // Method to create test data based on the cached required fields
+    public static SObject createTestData(String objectName) {
+        // Retrieve cached fields
+        Cache.OrgPartition partition = Cache.Org.getPartition('defaultPartition');
+        String cacheKey = objectName + '_RequiredFields';
+
+        List<String> requiredFields = (List<String>) partition.get(cacheKey);
+
+        // If cache is empty, refresh it
+        if (requiredFields == null || requiredFields.isEmpty()) {
+            cacheRequiredFields(objectName);
+            requiredFields = (List<String>) partition.get(cacheKey);
+        }
+
+        // Create a new SObject instance and populate required fields with dummy data
+        SObject testRecord = Schema.getGlobalDescribe().get(objectName).newSObject();
+        for (String field : requiredFields) {
+            // Add some simple logic to populate different field types
+            Schema.DescribeFieldResult fieldDescribe = Schema.getGlobalDescribe().get(objectName).getDescribe().fields.getMap().get(field).getDescribe();
+            
+            if (fieldDescribe.getType() == Schema.DisplayType.String) {
+                testRecord.put(field, 'Test Value');
+            } else if (fieldDescribe.getType() == Schema.DisplayType.Date) {
+                testRecord.put(field, Date.today());
+            } else if (fieldDescribe.getType() == Schema.DisplayType.Double || fieldDescribe.getType() == Schema.DisplayType.Currency) {
+                testRecord.put(field, 100.00);
+            } else {
+                testRecord.put(field, 'Test Value');
+            }
+        }
+
+        // Insert the test record and return it
+        insert testRecord;
+        return testRecord;
+    }
+}
+
+@IsTest
+private class TestDataFactoryTest {
+    
+    @IsTest
+    static void testCreateTestData() {
+        // Create test data for Account object
+        SObject account = TestDataFactory.createTestData('Account');
+        
+        // Perform assertions to validate that the data was created
+        System.assertNotEquals(account.get('Id'), null, 'The Account record should have been created and inserted.');
+    }
+
+    @IsTest
+    static void testCacheRequiredFields() {
+        // Test the caching mechanism for required fields
+        TestDataFactory.cacheRequiredFields('Account');
+        
+        Cache.OrgPartition partition = Cache.Org.getPartition('defaultPartition');
+        List<String> cachedFields = (List<String>) partition.get('Account_RequiredFields');
+
+        // Perform assertions
+        System.assertNotEquals(cachedFields, null, 'Cache should contain the required fields.');
+        System.assert(cachedFields.contains('Name'), 'Name field should be required for Account.');
+    }
+}
+
+public class DailyCacheRefresh implements Schedulable {
+    
+    public void execute(SchedulableContext sc) {
+        TestDataFactory.cacheRequiredFields('Account');
+        TestDataFactory.cacheRequiredFields('Contact');
+        // Add other objects as necessary
+    }
+}
