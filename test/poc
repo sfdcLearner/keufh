@@ -1,0 +1,18 @@
+Here’s a professionally structured and detailed summary you can use to present the pros, cons, and risks of the current direct integration approach for the PoC, including all your context.
+
+⸻
+
+Direct Integration with Salesforce for Order Automation – Pros, Cons, and Risks
+
+⚙️ Context
+
+A team is attempting to integrate an internal system directly with Salesforce to automate a complete order lifecycle for a Proof of Concept (PoC). This involves:
+	•	Creating and relating records across a complex Salesforce object model.
+	•	Handling product modeling and change orders, including external billing system lookups.
+	•	Using Salesforce REST APIs (e.g., Query, sObject API) for record injection.
+	•	Navigating a milestone-driven workflow with significant manual steps.
+	•	No existing API currently supports the end-to-end workflow; internal team must build all integration logic.
+
+⸻
+
+✅ Advantages of Direct Integration
